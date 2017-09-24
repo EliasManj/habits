@@ -25,6 +25,15 @@ class HabitModel():
     def getInitDate(self):
         return self.initDate
 
+    def setTimes(self, times):
+        self.times = times
+
+    def setColor(self, color):
+        self.color = color
+
+    def setDesc(self, desc):
+        self.desc = desc
+
     @classmethod
     def findByHabit(cls, name):
         connection = sqlite3.connect('data.db')
@@ -59,7 +68,21 @@ class HabitModel():
         try:
             cursor.execute(query, (self.getName(), self.getTimes(), self.getColor(), self.getDesc(), self.getInitDate()))
         except:
+            connection.close()
             return None
         connection.commit()
         connection.close()
         return self
+
+    def delete(self):
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+        query = "DELETE FROM habitList WHERE habit=?"
+        try:
+            cursor.execute(query, (self.getName(),))
+        except:
+            connection.close()
+            return None
+        connection.commit()
+        connection.close()
+        return {'message':'deleted'}

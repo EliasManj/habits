@@ -34,7 +34,8 @@ class Habit(Resource):
 
     def post(self, name):
         requestData = Habit.parser.parse_args()
-        if HabitModel.findByHabit("_".join(requestData['name'].split(" ")).lower()):
+        requestData['name'] = "_".join(requestData['name'].split(" ")).lower()
+        if HabitModel.findByHabit(requestData['name']):
             return Msg.showMsg("There already exists a habit with that name")
         today = datetime.date.today()
         newHabit = HabitModel(requestData['name'], requestData['times'], requestData['color'], requestData['desc'], str(today))
@@ -43,3 +44,24 @@ class Habit(Resource):
             return Msg.showMsg('habit added')
         else:
             return Msg.showMsg("something happened..."), 500
+
+    def delete(self, name):
+        habit = HabitModel.findByHabit("_".join(name.split("+")).lower())
+        if habit:
+            deleted = habit.delete()
+            if deleted:
+                return Msg.showMsg('item deleted'), 200
+            else:
+                return Msg.showMsg('something happened'), 500
+        else:
+            return Msg.showMsg("habit not found"), 404
+
+    def put(self, name):
+        requestData = Habit.parser.parse_args()
+        requestData['name'] = "_".join(requestData['name'].split(" ")).lower()
+        habit = HabitModel.findByHabit(requestData['name'])
+        if habit:
+            habit.setTimes(requestData['times'])
+            habit.setColor(requestData['color'])
+            habit.setDesc(requestData['desc'])
+            habit.update()
