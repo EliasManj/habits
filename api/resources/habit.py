@@ -28,7 +28,7 @@ class Habit(Resource):
     def get(self, name):
         habit = HabitModel.findByHabit("_".join(name.split("+")).lower())
         if habit:
-            return {'habit': habit.getName(), 'times': habit.getTimes(), 'color': habit.getColor(), 'desc': habit.getDesc(), 'created in': habit.getInitDate()}
+            return habit.json()
         else:
             return Msg.showMsg("habit not found"), 404
 
@@ -64,4 +64,6 @@ class Habit(Resource):
             habit.setTimes(requestData['times'])
             habit.setColor(requestData['color'])
             habit.setDesc(requestData['desc'])
-            habit.update()
+            updated = habit.update()
+            if updated:
+                return updated.json()
