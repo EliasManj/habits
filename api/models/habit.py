@@ -25,6 +25,19 @@ class HabitModel():
     def getInitDate(self):
         return self.initDate
 
+    def setTimes(self, times):
+        self.times = times
+
+    def setColor(self, color):
+        self.color = color
+
+    def setDesc(self, desc):
+        self.desc = desc
+
+    def json(self):
+        return {'habit': self.getName(), 'times': self.getTimes(), 'color': self.getColor(), 'desc': self.getDesc(), 'created in': self.getInitDate()}
+
+
     @classmethod
     def findByHabit(cls, name):
         connection = sqlite3.connect('data.db')
@@ -59,6 +72,33 @@ class HabitModel():
         try:
             cursor.execute(query, (self.getName(), self.getTimes(), self.getColor(), self.getDesc(), self.getInitDate()))
         except:
+            connection.close()
+            return None
+        connection.commit()
+        connection.close()
+        return self
+
+    def delete(self):
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+        query = "DELETE FROM habitList WHERE habit=?"
+        try:
+            cursor.execute(query, (self.getName(),))
+        except:
+            connection.close()
+            return None
+        connection.commit()
+        connection.close()
+        return {'message':'deleted'}
+
+    def update(self):
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+        query = "UPDATE habitList SET times=?, color=?, description=? WHERE habit=?"
+        try:
+            cursor.execute(query, (self.getTimes(), self.getColor(), self.getDesc(), self.getName()))
+        except:
+            connection.close()
             return None
         connection.commit()
         connection.close()
