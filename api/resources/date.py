@@ -6,3 +6,10 @@ class DateList(Resource):
     def get(self):
         dateList = DateModel.getAllDates()
         return {'dates': dateList}, 200
+
+
+class Date(Resource):
+
+    def get(self, name):
+        name = "-".join(name.split('+'))
+        DateModel.findByDate(name)

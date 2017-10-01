@@ -55,3 +55,14 @@ class DateModel:
             for j in range(2,len(colsToList)):
                 date[j] = {colsToList[j][1]: date[j]}
         return datesToList
+
+    def findByDate(date):
+        DateModel.updateDates()
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+        query = "SELECT * FROM datesTable WHERE currentDate=?"
+        row = cursor.execute(query, (date,)).fetchone()
+        cols = DateModel.getColumns()[2::]
+        habits = [x[1] for x in cols]
+        print(habits)
+        print(row)
