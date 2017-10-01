@@ -1,2 +1,2 @@
-api/resources/__pycache__/*
-api/models/__pycache__/*
+api/models/__pycache__/habit.cpython-35.pyc
+api/resources/__pycache__/habit.cpython-35.pyc
